@@ -1,0 +1,10 @@
+види пайплайнів:
+	1. CI pipeline - Build and test stages defined in .gitlab-ci.yml
+	2. Deploy pipeline -  Deploy stage(s) defined in .gitlab-ci.yml The flow of deploying code to servers through various stages: e.g. development to staging to 
+		production
+	3. Project pipeline - Cross-project CI dependencies triggered via API, particularly for micro-services, but also for complicated build dependencies: 
+		e.g. api -> front-end, ce/ee -> omnibus
+	4. Build pipeline - build->unit test->deploy code->набір тестів
+	5. release pipeline - deploy->functional tests->deploy->integration test->deploy
+	                      | dev                   |       test               |   prod
+

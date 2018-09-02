@@ -1,0 +1,22 @@
+види пайплайнів:
+https://docs.gitlab.com/ee/ci/pipelines.html#types-of-pipelines
+	1. CI pipeline - Build and test stages defined in .gitlab-ci.yml
+	2. Deploy pipeline -  Deploy stage(s) defined in .gitlab-ci.yml The flow of deploying code to servers through various stages: e.g. development to staging to 
+		production
+	3. Project pipeline - Cross-project CI dependencies triggered via API, particularly for micro-services, but also for complicated build dependencies: 
+		e.g. api -> front-end, ce/ee -> omnibus
+	4. Build pipeline - build->unit test->deploy code->набір тестів
+	5. release pipeline - deploy->functional tests->deploy->integration test->deploy
+	                      | dev                   |       test               |   prod
+
+репорти
+	ставиться плагін (наприклад Thucydides reports plugin), плагіну вказується шлях до репортів (для мавена target/site/thucydides)
+	і плагін потім візуалізує репорт
+	HTML Publisher Plugin
+	Cucumber Reports Plugin
+
+Maven - фреймвок для автоматизації збірки проектів на основі файлів з описом їх структури на мові POM (схоже на xml), використовується для збірки 
+	проектів, написаних на  Java, C#, Ruby, Scala,..., сам може підтягнути всі залежності, простіший в використанні для типових задач,
+Ant - більш тонкий в налаштуваннях, використовує xml
+Gradle - базується на groovy
+sbt - scala 

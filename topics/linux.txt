@@ -1,0 +1,23 @@
+users, groups
+	groups - list all groups
+	groups user - list all users of group "user"
+	useradd -g cartoons spike - додати юзера spike в групу cartoons
+	 /etc/group - secondary groups
+	 /etc/passwd - primary groups
+	sudo useradd vasyapupkin -m - створити домашній каталог (по замовчуванню не створюється)
+	sudo useradd -D -s /bin/bash - змінити параметри створення юзера (тут змінити оболонку)
+	sudo usermod - редагування користувача (usermod -b /home/vasa vasapupkin)
+	sudo passwd -d vasyapupkin - встановити пустий пароль
+	sudo passwd -l vasyapupkin - заблокувати
+	sudo passwd -u vasyapupkin - розблокувати
+	
+	sudo groupadd testgroup - створити групу
+	
+
+права
+ 	1-x
+ 	2-w
+ 	4-r
+
+Cgroups = limits how much you can use;
+namespaces = limits what you can see (and therefore use)

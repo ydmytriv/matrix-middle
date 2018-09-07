@@ -61,6 +61,7 @@ https://ssl.com.ua/faq/how-to-install-ssl-nginx.html
 		- не дає переваги при завантаженні великих файлів
 
 SSL vs TLS
+https://codeguida.com/post/866
 	TLS(Transport Layer Security) - наступник SSL(Secure Sockets Layer)
 	при використанні сертифікатів дані, якими обмінюється клієнт з сервером шифруються
 	види сертифікатів 

@@ -1,0 +1,120 @@
+mariaDB - по суті MySQL з внесеними змінами для покращення, повністю імітує роботу MySQL
+	MariaDB Galera Cluster - розширює можливості mariaDB засобами для організації синхронної реплікації дпних між декількома вузлами (master-master - кожен вузол може модифікувати базу), кожна транзакція на зміну виконується паралельно на всіх вузлах.
+	Алгоритм зваженого опитування - або непарна кількість нод, або назначити кожному вузлу свою вагу
+	Для зменшення кількості узгоджень:
+	- Групова комунікація - протокол взаємодії вузлів між собою
+	- Множини запису - записи групуються в певну множину, щоб зменшити кількість узгоджень
+	- Автомат станів баз даних - автомат обробляє транзакції читання даних всередині локальної бази даних а потім передає вже множину транзакцій іншим вузлам
+	- Впорядкування транзакцій - перед тим як підтвердити локально і передати іншим транзакції групуютсья таким чином, щоб як можна більше транзакції пройшли тест
+		узгодження
+
+MariaDB vs MySQL
+	- більше механізмів зберігання даних (cassandra, connect)
+	- краща продуктивність
+		- кращий оптимізатор запитів
+		- швидка реплікація
+		- кращий асинхронний ввід/вивід
+	- повністю open source
+
+Percona
+	майже той самий MySQL. 
+	Основна відмінність - по замовчуванню XtraDB storage engine (замість InnoDB plugin) - краща продуктивність і масштабування особливо на багатоядерних серверах.
+	покращений функціонал - більше всякої статистики, 
+	повна сумісість з innodb (XtraDB це покращена innodb - краща робота з пам"яттю, підтримка багатопоточності і багатопроцесорності)
+
+PostgreSQL 
+https://habr.com/post/282764/
+	об"єктно-реляційна БД (mysql - реляційна), є підтримка об"єктів і їх поведінки (типи даних, ф-ції, операції, домени, індекси), можна створювати і зберігати
+	складні структури даних.
+	типи даних:
+		крім стандартних, підтримуються uuid, грошовий, геометричний, json, xml, мережеві адреси ...
+	краща цілісність даних
+
+storage engine (підсистема зберігання)- компонент субд, який керує механізмами зберігання БД або бібліотека, яка підключається до програми і дає їй ф-ції БД
+	відповідає за розміщення БД і організацію доступу до даних. Бібліотека дозволяє програмі використовувати певний формат файлів БД
+	InnoDB, XtraDB,SQLite, Aria, NDB, Falcon, DBM
+
+види запитів
+	1. SELECT (деколи окремо, деколи відносять до DML)
+	2. DML (Data Manipulation Language) - INSERT, UPDATE, DELETE, MERGE, SELECT(деколи)
+	3. DDL (Data Definition Language) - створення, зміна, видалення об"єктів БД - CREATE, ALTER, DROP
+	4. DCL (Data Control Language) - управління правами - GRANT, REVOKE. 
+	5. Керування транзакціями - COMMIT, ROLLBACK, ROLLBACK TO SAVEPOINT
+запити SQL:
+	визначення даних:(ddl)
+		- create - створює об"єкт(таблиця, база, ...)
+		- alter - змінює об"єкт
+		- drop - видаляє об"єкт
+	маніпуляція даними:(dml)
+		- select
+		- insert - додає нові дані
+		- update - змінює дані
+		- delete - видаляє дані
+	доступ до даних:(dcl)
+		- grant - дає користувачу або групі доступ на операції з об"єктом
+		- revoke - відкликає раніше надані дозволи
+		- deny - заборона, яка має пріорітет над дозволами
+	управління транзакціями: (транзакція - послідовність операцій, які виконуються в логічному порядку користувачем або програмою, яка працює з БД)
+		- commit - приміняє транзакцію
+		- rollback - відкатує зміни в текучій транзакції
+		- savepoint - ділить транзакцію на менші участки
+		- set transaction - розміщує ім"я транзакції
+
+Трігер - процедура особливого типу, яку користувач не викликає безпосередньо, її виконання обумовлено дією по модифікації таблиці.
+	BEFORE - до вказаної події
+	AFTER - після події	
+
+Процедура - набір дій, які потрібно виконати в певній послідовності як одне ціле
+	CREATE PROCEDURE або CREATE PROC
+
+	USE productsdb;
+	GO
+	CREATE PROCEDURE ProductSummary AS
+	BEGIN
+	    SELECT ProductName AS Product, Manufacturer, Price
+	    FROM Products
+	END;
+
+список запитів, активних зараз
+	SELECT
+	    p.spid, p.status, p.hostname, p.loginame, p.cpu, r.start_time, r.command,
+	    p.program_name, text 
+	FROM
+	    sys.dm_exec_requests AS r,
+	    master.dbo.sysprocesses AS p 
+	    CROSS APPLY sys.dm_exec_sql_text(p.sql_handle)
+	WHERE
+	    p.status NOT IN ('sleeping', 'background') 
+	AND r.session_id = p.spid
+
+Limit
+	SELECT * FROM users WHERE id > 5 LIMIT 10 - виведе 10 перших значень
+	SELECT * FROM users WHERE id > 5 LIMIT 10, 20 - виведе 20 значень починаючи з 10
+
+Different Types of SQL JOINs
+Here are the different types of the JOINs in SQL:
+
+	(INNER) JOIN: Returns records that have matching values in both tables
+	LEFT (OUTER) JOIN: Return all records from the left table, and the matched records from the right table
+	RIGHT (OUTER) JOIN: Return all records from the right table, and the matched records from the left table
+	FULL (OUTER) JOIN: Return all records when there is a match in either left or right table
+
+Шифрування паролів - використовуємо MD5
+	mysql_format(DATABASE, QUERY, sizeof(QUERY), "INSERT INTO `players` (`Name`, `Key`) VALUES ('%s', MD5('%s'))", Pi[playerid][Name], inputtext);
+
+скинути пароль рута
+	https://support.rackspace.com/how-to/mysql-resetting-a-lost-mysql-root-password/
+
+Політики паролів
+http://qaru.site/questions/86779/create-a-six-character-password-in-mysql-57
+	SHOW VARIABLES LIKE 'validate_password%'; - показати плітику паролів
+	поміняти змінні 
+	# SET GLOBAL validate_password_length = 5;
+	# SET GLOBAL validate_password_number_count = 0;
+	# SET GLOBAL validate_password_mixed_case_count = 0;
+	# SET GLOBAL validate_password_special_char_count = 0;
+	можна відключити валідацію паролю :
+	validate-password=off в конфігураційному файлі
+
+реплікація
+https://habr.com/post/56702/
